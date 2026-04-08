@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+:root {
+  --background: #060816;
+  --foreground: #eef2ff;
+  --panel: rgba(10, 14, 34, 0.82);
+  --panel-strong: rgba(18, 26, 58, 0.92);
+  --panel-border: rgba(137, 158, 255, 0.18);
+  --muted: #95a3d5;
+  --accent: #88a2ff;
+  --accent-strong: #6f7dff;
+  --accent-secondary: #6dd3ff;
+  --danger: #ff6b95;
+  --success: #4ae1a4;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-panel: var(--panel);
+  --color-panel-strong: var(--panel-strong);
+  --color-panel-border: var(--panel-border);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-secondary: var(--accent-secondary);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 1440px;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), sans-serif;
+  background-image:
+    radial-gradient(circle at top left, rgba(127, 90, 240, 0.18), transparent 28%),
+    radial-gradient(circle at top right, rgba(74, 144, 226, 0.22), transparent 34%),
+    linear-gradient(180deg, rgba(5, 8, 20, 0.98), rgba(4, 7, 18, 1));
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(111, 125, 255, 0.35);
+}
+
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(136, 162, 255, 0.32) transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: rgba(136, 162, 255, 0.32);
+}
+
+.grid-shell {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+}
