@@ -60,6 +60,8 @@ This demo currently exists to exercise the stable runtime surface:
 - raw stats reads
 - GUI-like detailed display stats
 - equipment listing / equip action
+- full item listing
+- skill listing / active skill selection
 - stable config reads / writes
 - request console for debugging
 
@@ -134,6 +136,7 @@ That snapshot should stay aligned with the upstream runtime contract.
 If the stable runtime surface changes, update:
 
 - this README
+- `CHANGELOG.md`
 - local contract snapshot files
 - route handlers / client types
 - any affected UI panels

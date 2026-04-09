@@ -3,9 +3,11 @@
 import {
   Activity,
   HardDriveDownload,
+  Package,
   ScrollText,
   Shield,
   Swords,
+  Workflow,
   Zap,
 } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -28,7 +30,14 @@ import {
 import { DisplayStatsPanel } from "@/features/pob/components/display-stats-panel";
 import { JsonPreview } from "@/features/pob/components/json-preview";
 import { SectionHeading } from "@/features/pob/components/section-heading";
-import type { ConsoleEntry, DisplayStatsResult } from "@/features/pob/types";
+import type {
+  ConsoleEntry,
+  DisplayStatsResult,
+  ItemListResult,
+  SelectedSkillResult,
+  SkillSelectionInput,
+  SkillListResult,
+} from "@/features/pob/types";
 import { asErrorMessage } from "@/lib/utils";
 
 function SidebarButton({
@@ -54,6 +63,9 @@ export function Dashboard() {
   const [stats, setStats] = useState<unknown>(null);
   const [displayStats, setDisplayStats] = useState<DisplayStatsResult | null>(null);
   const [equipment, setEquipment] = useState<unknown>(null);
+  const [items, setItems] = useState<ItemListResult | null>(null);
+  const [skills, setSkills] = useState<SkillListResult | null>(null);
+  const [selectedSkill, setSelectedSkill] = useState<SelectedSkillResult | null>(null);
   const [config, setConfig] = useState<Record<string, unknown>>({});
   const [saveOutput, setSaveOutput] = useState<unknown>(null);
   const [consoleEntries, setConsoleEntries] = useState<ConsoleEntry[]>([]);
@@ -66,6 +78,9 @@ export function Dashboard() {
   const [savePath, setSavePath] = useState("");
   const [itemText, setItemText] = useState("");
   const [itemSlot, setItemSlot] = useState("");
+  const [skillGroup, setSkillGroup] = useState("");
+  const [skillIndex, setSkillIndex] = useState("");
+  const [skillPart, setSkillPart] = useState("");
 
   function pushConsole(entry: Omit<ConsoleEntry, "id" | "createdAt">) {
     setConsoleEntries((current) => [
@@ -129,6 +144,22 @@ export function Dashboard() {
     return typeof value === "string" ? value : "";
   }
 
+  function toOptionalNumber(value: string) {
+    if (value.trim() === "") {
+      return undefined;
+    }
+
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+  }
+
+  function syncSelectedSkillInputs(value: SelectedSkillResult | null) {
+    setSelectedSkill(value);
+    setSkillGroup(value?.group?.index != null ? String(value.group.index) : "");
+    setSkillIndex(value?.skill?.index != null ? String(value.skill.index) : "");
+    setSkillPart(value?.part?.index != null ? String(value.part.index) : "");
+  }
+
   return (
     <div className="grid-shell min-h-screen gap-6 p-6">
       <aside className="sticky top-0 flex h-screen flex-col gap-6 rounded-[30px] border border-panel-border bg-panel-strong px-5 py-6">
@@ -148,6 +179,8 @@ export function Dashboard() {
           <SidebarButton icon={Activity} label="Runtime" />
           <SidebarButton icon={HardDriveDownload} label="Build Loader" />
           <SidebarButton icon={Zap} label="Stats" />
+          <SidebarButton icon={Workflow} label="Skills" />
+          <SidebarButton icon={Package} label="Items" />
           <SidebarButton icon={Swords} label="Equipment" />
           <SidebarButton icon={Shield} label="Config" />
           <SidebarButton icon={ScrollText} label="Request Console" />
@@ -485,6 +518,163 @@ export function Dashboard() {
                 Refresh Detailed Stats
               </Button>
               <DisplayStatsPanel value={displayStats} />
+            </CardContent>
+          </Card>
+        </section>
+
+        <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
+          <Card>
+            <CardHeader>
+              <CardTitle>Skills Explorer</CardTitle>
+              <CardDescription>
+                Inspect all socket groups, switch the active skill, and review the currently selected skill snapshot.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap gap-3">
+                <Button
+                  variant="secondary"
+                  disabled={isPending}
+                  onClick={() =>
+                    runAction({
+                      title: "List skills",
+                      endpoint: "/api/build/skills",
+                      request: () => apiGet<SkillListResult>("/api/build/skills"),
+                      onSuccess: setSkills,
+                    })
+                  }
+                >
+                  Refresh Skills
+                </Button>
+                <Button
+                  variant="secondary"
+                  disabled={isPending}
+                  onClick={() =>
+                    runAction({
+                      title: "Get selected skill",
+                      endpoint: "/api/build/skills/selected",
+                      request: () => apiGet<SelectedSkillResult>("/api/build/skills/selected"),
+                      onSuccess: syncSelectedSkillInputs,
+                    })
+                  }
+                >
+                  Refresh Selected
+                </Button>
+              </div>
+
+              <div className="grid gap-3 md:grid-cols-3">
+                <div className="space-y-2">
+                  <Label htmlFor="skill-group">Group</Label>
+                  <Input
+                    id="skill-group"
+                    type="number"
+                    min="1"
+                    value={skillGroup}
+                    onChange={(event) => setSkillGroup(event.target.value)}
+                    placeholder="1"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="skill-index">Skill</Label>
+                  <Input
+                    id="skill-index"
+                    type="number"
+                    min="1"
+                    value={skillIndex}
+                    onChange={(event) => setSkillIndex(event.target.value)}
+                    placeholder="1"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="skill-part">Part</Label>
+                  <Input
+                    id="skill-part"
+                    type="number"
+                    min="1"
+                    value={skillPart}
+                    onChange={(event) => setSkillPart(event.target.value)}
+                    placeholder="1"
+                  />
+                </div>
+              </div>
+
+              <Button
+                disabled={isPending}
+                onClick={() => {
+                  const payload: SkillSelectionInput = {};
+                  const group = toOptionalNumber(skillGroup);
+                  const skill = toOptionalNumber(skillIndex);
+                  const part = toOptionalNumber(skillPart);
+
+                  if (group !== undefined) {
+                    payload.group = group;
+                  }
+                  if (skill !== undefined) {
+                    payload.skill = skill;
+                  }
+                  if (part !== undefined) {
+                    payload.part = part;
+                  }
+
+                  runAction({
+                    title: "Select skill",
+                    endpoint: "/api/build/skills/select",
+                    payload,
+                    request: async () => {
+                      const nextSkills = await apiPost<SkillListResult>("/api/build/skills/select", payload);
+                      const nextSelected = await apiGet<SelectedSkillResult>("/api/build/skills/selected");
+                      return { skills: nextSkills, selected: nextSelected };
+                    },
+                    onSuccess: (result) => {
+                      setSkills(result.skills);
+                      syncSelectedSkillInputs(result.selected);
+                    },
+                  });
+                }}
+              >
+                Apply Selection
+              </Button>
+
+              <div className="grid gap-4 xl:grid-cols-2">
+                <JsonPreview value={skills} emptyLabel="Skills list not loaded." height="min-h-[22rem]" />
+                <JsonPreview
+                  value={selectedSkill}
+                  emptyLabel="Selected skill not loaded."
+                  height="min-h-[22rem]"
+                />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Items Browser</CardTitle>
+              <CardDescription>
+                Inspect every item stored in the active build. This is separate from equipped slot state.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex gap-3">
+                <Button
+                  variant="secondary"
+                  disabled={isPending}
+                  onClick={() =>
+                    runAction({
+                      title: "List items",
+                      endpoint: "/api/items",
+                      request: () => apiGet<ItemListResult>("/api/items"),
+                      onSuccess: setItems,
+                    })
+                  }
+                >
+                  Refresh Items
+                </Button>
+              </div>
+              <JsonPreview
+                value={items}
+                emptyLabel="Items list not loaded."
+                height="min-h-[31rem]"
+              />
             </CardContent>
           </Card>
         </section>

@@ -112,6 +112,37 @@
         "build_name": "string"
       }
     },
+    "list_items": {
+      "params": {
+        "build_xml": "string",
+        "build_code": "string",
+        "build_name": "string"
+      }
+    },
+    "list_skills": {
+      "params": {
+        "build_xml": "string",
+        "build_code": "string",
+        "build_name": "string"
+      }
+    },
+    "select_skill": {
+      "params": {
+        "group": "number",
+        "mainSocketGroup": "number",
+        "skill": "number",
+        "mainActiveSkill": "number",
+        "part": "number",
+        "skillPart": "number"
+      }
+    },
+    "get_selected_skill": {
+      "params": {
+        "build_xml": "string",
+        "build_code": "string",
+        "build_name": "string"
+      }
+    },
     "set_config": {
       "params": {
         "bandit": "string",

@@ -1,4 +1,10 @@
 import type { StableMethod } from "@/lib/contracts/stable";
+import type {
+  ItemListResult,
+  SelectedSkillResult,
+  SkillSelectionInput,
+  SkillListResult,
+} from "@/features/pob/types";
 import { createWorkerRequest } from "@/server/pob/contract";
 import { PobClientError } from "@/server/pob/errors";
 import { getPersistentPobWorker } from "@/server/pob/worker";
@@ -42,6 +48,10 @@ export const pobClient = {
   getStats: (fields: string[]) => callWorker<Record<string, unknown>>("get_stats", { fields }),
   getDisplayStats: () => callWorker<Record<string, unknown>>("get_display_stats"),
   listEquipment: () => callWorker<Record<string, unknown>>("list_equipment"),
+  listItems: () => callWorker<ItemListResult>("list_items"),
+  listSkills: () => callWorker<SkillListResult>("list_skills"),
+  selectSkill: (params: SkillSelectionInput) => callWorker<SkillListResult>("select_skill", params),
+  getSelectedSkill: () => callWorker<SelectedSkillResult>("get_selected_skill"),
   equipItem: (itemText: string, slot?: string) =>
     callWorker("equip_item", {
       item_text: itemText,
