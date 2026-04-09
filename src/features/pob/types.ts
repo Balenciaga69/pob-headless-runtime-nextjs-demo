@@ -41,3 +41,85 @@ export type DisplayStatsResult = {
   };
   entries: DisplayStatEntry[];
 };
+
+export type ItemEntry = {
+  id?: string | number;
+  raw?: string | null;
+  item?: {
+    name?: string | null;
+    rarity?: string | null;
+    type?: string | null;
+    itemLevel?: number | null;
+    sockets?: unknown;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown;
+};
+
+export type ItemListResult = {
+  items?: ItemEntry[];
+  slots?: Array<{
+    slot?: string;
+    label?: string;
+    raw?: string | null;
+    item?: ItemEntry["item"];
+    [key: string]: unknown;
+  }>;
+  [key: string]: unknown;
+};
+
+export type SkillListEntry = {
+  index?: number;
+  name?: string | null;
+  skillPart?: number | string | null;
+  [key: string]: unknown;
+};
+
+export type SkillGroupEntry = {
+  index?: number;
+  label?: string | null;
+  displayLabel?: string | null;
+  slot?: string | null;
+  mainActiveSkill?: number | null;
+  isSelected?: boolean;
+  skills?: SkillListEntry[];
+  [key: string]: unknown;
+};
+
+export type SkillListResult = {
+  mainSocketGroup?: number | null;
+  calcsSkillNumber?: number | null;
+  groups?: SkillGroupEntry[];
+  [key: string]: unknown;
+};
+
+export type SelectedSkillResult = {
+  group?: {
+    index?: number;
+    label?: string | null;
+    displayLabel?: string | null;
+    slot?: string | null;
+    [key: string]: unknown;
+  };
+  skill?: {
+    index?: number;
+    name?: string | null;
+    [key: string]: unknown;
+  };
+  part?: {
+    index?: number;
+    name?: string | null;
+    [key: string]: unknown;
+  };
+  calcsSkillNumber?: number | null;
+  [key: string]: unknown;
+};
+
+export type SkillSelectionInput = {
+  group?: number;
+  mainSocketGroup?: number;
+  skill?: number;
+  mainActiveSkill?: number;
+  part?: number;
+  skillPart?: number;
+};
