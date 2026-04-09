@@ -59,6 +59,7 @@ This demo currently exists to exercise the stable runtime surface:
 - summary reads
 - raw stats reads
 - GUI-like detailed display stats
+- preview item swap detailed display stats without mutating the session
 - equipment listing / equip action
 - full item listing
 - skill listing / active skill selection

@@ -1,0 +1,8 @@
+{
+  "id": "preview-item-display-stats-demo",
+  "method": "preview_item_display_stats",
+  "params": {
+    "item_text": "Rarity: Rare\nDemo Item\n--------\nRuby Ring",
+    "slot": "Ring 1"
+  }
+}

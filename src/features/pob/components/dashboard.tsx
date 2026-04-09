@@ -29,11 +29,13 @@ import {
 } from "@/features/pob/constants";
 import { DisplayStatsPanel } from "@/features/pob/components/display-stats-panel";
 import { JsonPreview } from "@/features/pob/components/json-preview";
+import { PreviewItemDisplayStatsPanel } from "@/features/pob/components/preview-item-display-stats-panel";
 import { SectionHeading } from "@/features/pob/components/section-heading";
 import type {
   ConsoleEntry,
   DisplayStatsResult,
   ItemListResult,
+  PreviewItemDisplayStatsResult,
   SelectedSkillResult,
   SkillSelectionInput,
   SkillListResult,
@@ -63,6 +65,8 @@ export function Dashboard() {
   const [stats, setStats] = useState<unknown>(null);
   const [displayStats, setDisplayStats] = useState<DisplayStatsResult | null>(null);
   const [equipment, setEquipment] = useState<unknown>(null);
+  const [previewItemDisplayStats, setPreviewItemDisplayStats] =
+    useState<PreviewItemDisplayStatsResult | null>(null);
   const [items, setItems] = useState<ItemListResult | null>(null);
   const [skills, setSkills] = useState<SkillListResult | null>(null);
   const [selectedSkill, setSelectedSkill] = useState<SelectedSkillResult | null>(null);
@@ -746,12 +750,34 @@ export function Dashboard() {
                   >
                     Equip Item
                   </Button>
+                  <Button
+                    variant="secondary"
+                    disabled={isPending}
+                    onClick={() =>
+                      runAction({
+                        title: "Preview item display stats",
+                        endpoint: "/api/equipment/preview",
+                        payload: { itemText, slot: itemSlot || undefined },
+                        request: () =>
+                          apiPost<PreviewItemDisplayStatsResult>("/api/equipment/preview", {
+                            itemText,
+                            slot: itemSlot || undefined,
+                          }),
+                        onSuccess: setPreviewItemDisplayStats,
+                      })
+                    }
+                  >
+                    Preview Detailed Stats
+                  </Button>
                 </div>
-                <JsonPreview
-                  value={equipment}
-                  emptyLabel="Equipment output not loaded."
-                  height="min-h-[30rem]"
-                />
+                <div className="space-y-4">
+                  <JsonPreview
+                    value={equipment}
+                    emptyLabel="Equipment output not loaded."
+                    height="min-h-[18rem]"
+                  />
+                  <PreviewItemDisplayStatsPanel value={previewItemDisplayStats} />
+                </div>
               </div>
             </CardContent>
           </Card>

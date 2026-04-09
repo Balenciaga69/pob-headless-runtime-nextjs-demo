@@ -10,6 +10,7 @@ export const stableMethods = [
   "get_summary",
   "get_stats",
   "get_display_stats",
+  "preview_item_display_stats",
   "equip_item",
   "list_equipment",
   "list_items",

@@ -1,0 +1,41 @@
+{
+  "id": "preview-item-display-stats-demo",
+  "ok": true,
+  "result": {
+    "kind": "item",
+    "restored": true,
+    "simulationMode": "snapshot_restore",
+    "slot": {
+      "requested": "Ring 1",
+      "resolved": "Ring 1",
+      "label": "Ring 1",
+      "autoResolved": false
+    },
+    "currentItem": {
+      "name": "Current Ring"
+    },
+    "candidateItem": {
+      "name": "Demo Item"
+    },
+    "displayStats": {
+      "_meta": {
+        "buildName": "API Build",
+        "mainSkill": "Example Skill"
+      },
+      "entries": [
+        {
+          "type": "stat",
+          "key": "AverageDamage",
+          "label": "Average Damage",
+          "formatted": "72,353.3"
+        }
+      ]
+    }
+  },
+  "meta": {
+    "request_id": "preview-item-display-stats-demo",
+    "api_version": "stable_api_v1",
+    "engine_version": "2.63.0",
+    "duration_ms": 3
+  }
+}

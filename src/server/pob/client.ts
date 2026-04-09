@@ -47,6 +47,11 @@ export const pobClient = {
   getSummary: () => callWorker<Record<string, unknown>>("get_summary"),
   getStats: (fields: string[]) => callWorker<Record<string, unknown>>("get_stats", { fields }),
   getDisplayStats: () => callWorker<Record<string, unknown>>("get_display_stats"),
+  previewItemDisplayStats: (itemText: string, slot?: string) =>
+    callWorker<Record<string, unknown>>("preview_item_display_stats", {
+      item_text: itemText,
+      ...(slot ? { slot } : {}),
+    }),
   listEquipment: () => callWorker<Record<string, unknown>>("list_equipment"),
   listItems: () => callWorker<ItemListResult>("list_items"),
   listSkills: () => callWorker<SkillListResult>("list_skills"),

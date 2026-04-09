@@ -42,6 +42,27 @@ export type DisplayStatsResult = {
   entries: DisplayStatEntry[];
 };
 
+export type PreviewItemDisplayStatsResult = {
+  kind?: string;
+  restored?: boolean;
+  simulationMode?: string;
+  slot?: {
+    requested?: string | null;
+    resolved?: string | null;
+    label?: string | null;
+    autoResolved?: boolean;
+    [key: string]: unknown;
+  };
+  currentItem?: {
+    [key: string]: unknown;
+  } | null;
+  candidateItem?: {
+    [key: string]: unknown;
+  } | null;
+  displayStats?: DisplayStatsResult;
+  [key: string]: unknown;
+};
+
 export type ItemEntry = {
   id?: string | number;
   raw?: string | null;
